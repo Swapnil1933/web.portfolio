@@ -795,30 +795,53 @@ function init(){
     });
   });
 
-  // ── SIMPLE SCROLL ANIMATION ──
-  // Fade in content as sections enter view
+  // ── VISIBLE SCROLL ANIMATION ENGINE ──
+  // Add animations to all sections
   document.querySelectorAll('.apple-scene').forEach(function(scene, i){
-    if(i === 0) return;
-    
-    var contentEls = Array.from(scene.querySelectorAll('.section-label, .section-title, .about-text, .skill-card, .project-item, .exp-item, .cert-item, .edu-item'));
-    gsap.set(contentEls, {opacity: 0, y: 30});
-    
+    var content = scene.querySelector('.apple-content');
+    if(!content) return;
+
+    // Set initial state for content
+    gsap.set(content, {opacity: 0.3, scale: 0.95, rotateY: 10});
+
+    // Animate on scroll
     ScrollTrigger.create({
       trigger: scene,
-      start: 'top 80%',
+      start: 'top center',
+      end: 'center center',
+      scrub: 1,
+      onUpdate: function(self){
+        var progress = self.progress;
+        gsap.to(content, {
+          opacity: 0.3 + progress * 0.7,
+          scale: 0.95 + progress * 0.05,
+          rotateY: 10 - progress * 10,
+          duration: 0.1,
+          overwrite: 'auto'
+        });
+      }
+    });
+
+    // Stagger child elements reveal
+    var children = Array.from(content.children);
+    gsap.set(children, {opacity: 0, y: 40});
+
+    ScrollTrigger.create({
+      trigger: scene,
+      start: 'top 75%',
       onEnter: function(){
-        gsap.to(contentEls, {
+        gsap.to(children, {
           opacity: 1,
           y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out'
+          duration: 0.5,
+          stagger: 0.12,
+          ease: 'back.out'
         });
       }
     });
   });
 
-  // Smooth scroll for buttons
+  // Enhanced button scroll
   document.querySelectorAll('.hero-ctas a').forEach(function(link){
     link.addEventListener('click', function(e){
       var target = this.getAttribute('href');
@@ -827,9 +850,9 @@ function init(){
         var el = document.querySelector(target);
         if(el){
           gsap.to(window, {
-            scrollTo: {y: el, offsetY: 100},
-            duration: 1,
-            ease: 'power2.inOut'
+            scrollTo: {y: el, offsetY: 80},
+            duration: 1.2,
+            ease: 'power3.inOut'
           });
         }
         return false;
