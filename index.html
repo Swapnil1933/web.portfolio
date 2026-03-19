@@ -338,8 +338,8 @@ body { margin:0; padding:0; background:var(--bg); }
       </h1>
       <p class="hero-sub">Building data-driven insights and analytical solutions. B.Tech CSE student at Lovely Professional University — turning raw data into decisions through dashboards, ML, and visualizations.</p>
       <div class="hero-ctas">
-        <a href="#scene-3" onclick="document.getElementById('scene-3').scrollIntoView({behavior:'auto'});return false;" class="btn-primary">View Projects</a>
-        <a href="#scene-7" onclick="document.getElementById('scene-7').scrollIntoView({behavior:'auto'});return false;" class="btn-outline">Get In Touch</a>
+        <a href="#scene-3" class="btn-primary">View Projects</a>
+        <a href="#scene-7" class="btn-outline">Get In Touch</a>
       </div>
     </div>
     <div class="hero-img-col" id="hero-img-col">
@@ -794,7 +794,76 @@ function init(){
       gsap.to(b,{x:0,y:0,duration:.5,ease:'elastic.out(1,.4)'});
     });
   });
-}
+
+  // ── ADVANCED STICKY SCROLL ENGINE ──
+  var scrollState = {y: 0, vy: 0};
+  var lastY = 0;
+  
+  // Smooth scroll interceptor for button clicks
+  document.querySelectorAll('.hero-ctas a').forEach(function(link){
+    link.addEventListener('click', function(e){
+      var target = this.getAttribute('href');
+      if(target && target.startsWith('#')){
+        e.preventDefault();
+        var el = document.querySelector(target);
+        if(el){
+          smoothScrollTo(el, 800);
+        }
+        return false;
+      }
+    });
+  });
+
+  // Advanced smooth scroll function
+  function smoothScrollTo(el, duration){
+    var targetY = el.offsetTop;
+    var startY = window.scrollY;
+    var distance = targetY - startY;
+    var startTime = Date.now();
+    
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+    }
+    
+    function scroll(){
+      var elapsed = Date.now() - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      var ease = easeInOutCubic(progress);
+      window.scrollTo(0, startY + distance * ease);
+      
+      if(progress < 1){
+        requestAnimationFrame(scroll);
+      } else {
+        window.scrollTo(0, targetY);
+      }
+    }
+    scroll();
+  }
+
+  // Advanced parallax effect on scroll
+  window.addEventListener('scroll', function(){
+    var scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    
+    // Update scroll-linked animations
+    scenes.forEach(function(scene, i){
+      var content = scene.querySelector('.apple-content');
+      if(!content) return;
+      
+      var rect = scene.getBoundingClientRect();
+      var inView = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if(inView){
+        var parallax = (window.scrollY - scene.offsetTop + window.innerHeight) / (window.innerHeight + scene.offsetHeight);
+        parallax = Math.max(0, Math.min(1, parallax));
+        
+        // Subtle parallax movement
+        gsap.set(content, {
+          y: parallax * 30,
+          opacity: 0.7 + parallax * 0.3
+        });
+      }
+    });
+  }, {passive: true});
 
 function setDot(i){
   Array.from(document.querySelectorAll('.apple-dot')).forEach(function(d,j){
