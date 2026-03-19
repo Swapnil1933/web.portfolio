@@ -795,52 +795,30 @@ function init(){
     });
   });
 
-  // ── TEXT ANIMATION ON SCROLL ENGINE ──
-  // Animate content elements as they come into view
-  var contentSelector = '.about-text, .skill-card, .project-item, .exp-item, .cert-item, .edu-item, .contact-info-list, .contact-form, .section-label, .about-detail-list li, .project-tags, .form-group';
-  
-  gsap.set(contentSelector, {opacity: 0, y: 40});
-
-  // Create scroll triggers for each section
+  // ── SIMPLE SCROLL ANIMATION ──
+  // Fade in content as sections enter view
   document.querySelectorAll('.apple-scene').forEach(function(scene, i){
-    var sectionLabel = scene.querySelector('.section-label');
-    var sectionTitle = scene.querySelector('.section-title span');
-    var contentEls = scene.querySelectorAll(contentSelector);
+    if(i === 0) return;
+    
+    var contentEls = Array.from(scene.querySelectorAll('.section-label, .section-title, .about-text, .skill-card, .project-item, .exp-item, .cert-item, .edu-item'));
+    gsap.set(contentEls, {opacity: 0, y: 30});
     
     ScrollTrigger.create({
       trigger: scene,
-      start: 'top 75%',
-      once: false,
+      start: 'top 80%',
       onEnter: function(){
-        // Stagger text animations
-        if(sectionLabel) gsap.to(sectionLabel, {opacity: 1, x: 0, duration: 0.5, ease: 'power2.out'});
-        
-        if(sectionTitle){
-          var text = sectionTitle.innerText;
-          sectionTitle.innerHTML = text.split('').map(function(char){
-            return '<span style="opacity:0;display:inline-block">' + (char === ' ' ? '&nbsp;' : char) + '</span>';
-          }).join('');
-          gsap.to(sectionTitle.querySelectorAll('span'), {
-            opacity: 1,
-            duration: 0.4,
-            stagger: 0.02,
-            ease: 'power2.out'
-          });
-        }
-        
-        // Animate all content with stagger
         gsap.to(contentEls, {
           opacity: 1,
           y: 0,
           duration: 0.6,
-          stagger: 0.08,
+          stagger: 0.1,
           ease: 'power2.out'
         });
       }
     });
   });
 
-  // Smooth scroll for button clicks
+  // Smooth scroll for buttons
   document.querySelectorAll('.hero-ctas a').forEach(function(link){
     link.addEventListener('click', function(e){
       var target = this.getAttribute('href');
@@ -848,37 +826,16 @@ function init(){
         e.preventDefault();
         var el = document.querySelector(target);
         if(el){
-          smoothScrollTo(el, 800);
+          gsap.to(window, {
+            scrollTo: {y: el, offsetY: 100},
+            duration: 1,
+            ease: 'power2.inOut'
+          });
         }
         return false;
       }
     });
   });
-
-  function smoothScrollTo(el, duration){
-    var targetY = el.offsetTop;
-    var startY = window.scrollY;
-    var distance = targetY - startY;
-    var startTime = Date.now();
-    
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-    }
-    
-    function scroll(){
-      var elapsed = Date.now() - startTime;
-      var progress = Math.min(elapsed / duration, 1);
-      var ease = easeInOutCubic(progress);
-      window.scrollTo(0, startY + distance * ease);
-      
-      if(progress < 1){
-        requestAnimationFrame(scroll);
-      } else {
-        window.scrollTo(0, targetY);
-      }
-    }
-    scroll();
-  }
 }
 
 function setDot(i){
