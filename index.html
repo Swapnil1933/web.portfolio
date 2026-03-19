@@ -211,42 +211,27 @@ body::before{content:"";position:fixed;inset:0;background-image:url("data:image/
   .nav-links{display:none;}
 }
 
-/* ══ APPLE-STYLE SCRUB ENGINE ══ */
-html { scroll-behavior: auto; }
+/* ══ MODERN SCROLL REVEAL ENGINE ══ */
+html { scroll-behavior: smooth; }
 body { margin:0; padding:0; background:var(--bg); }
 
-/* Each scene is a tall scroll container that pins its content */
+/* Sections flow naturally — no pinning */
 .apple-scene {
   position: relative;
-  height: auto;
-  min-height: auto;
-}
-.apple-scene:first-child { height: 100vh; }
-
-/* The pinned panel stays fixed while you scroll through the scene */
-.apple-pin {
-  position: sticky;
-  top: 0;
-  height: auto;
-  min-height: 100vh;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* Content inside the pinned panel */
+/* Pass-through wrapper — no sticky positioning */
+.apple-pin {
+  width: 100%;
+}
+
+/* Section content — natural flow, no inner scroll */
 .apple-content {
   width: 100%;
-  max-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 90px 5vw 60px;
+  padding: 90px 5vw 80px;
   box-sizing: border-box;
-  will-change: transform, opacity;
 }
-.apple-content::-webkit-scrollbar { width: 3px; }
-.apple-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); }
 
 /* Progress bar */
 #apple-bar {
@@ -636,7 +621,7 @@ window.addEventListener('scroll',function(){
 },{passive:true});
 
 // ══════════════════════════════════════
-// APPLE-STYLE SCRUB ENGINE
+// MODERN SCROLL REVEAL ENGINE
 // ══════════════════════════════════════
 function init(){
   gsap.registerPlugin(ScrollTrigger);
@@ -658,9 +643,7 @@ function init(){
     dotsWrap.appendChild(d);
   });
 
-  var dots = Array.from(dotsWrap.querySelectorAll('.apple-dot'));
-
-  // Global scroll progress bar
+  // Global scroll progress bar — linked directly to scroll position
   ScrollTrigger.create({
     start: 0,
     end: 'max',
@@ -669,110 +652,104 @@ function init(){
     }
   });
 
-  // ── Scene 0: HERO ──
-  var hero = scenes[0].querySelector('.apple-content');
+  // ── Scene 0: HERO — smooth parallax depth layers (no pin) ──
   var heroTl = gsap.timeline({
     scrollTrigger:{
       trigger: scenes[0],
       start: 'top top',
       end: 'bottom top',
-      scrub: 0.5,
-      pin: false,
+      scrub: 0.8,
     }
   });
-  // Hero grid drifts up
-  heroTl.to(scenes[0].querySelector('.hero-grid-bg'), {yPercent:40, ease:'none'}, 0);
-  // Hero text and image drift up at different speeds (parallax)
-  heroTl.to(scenes[0].querySelector('.hero-text-col'), {yPercent:-25, opacity:0, ease:'none'}, 0);
-  heroTl.to(scenes[0].querySelector('#hero-img-col'),  {yPercent:-15, opacity:0, ease:'none'}, 0);
-  heroTl.to(scenes[0].querySelector('.hero-stats'),    {yPercent:-30, opacity:0, ease:'none'}, 0);
+  heroTl.to(scenes[0].querySelector('.hero-grid-bg'),    {yPercent: 35,  ease:'none'}, 0);
+  heroTl.to(scenes[0].querySelector('.hero-text-col'),   {yPercent:-18, opacity:0, ease:'none'}, 0);
+  heroTl.to(scenes[0].querySelector('#hero-img-col'),    {yPercent:-10, opacity:0, ease:'none'}, 0);
+  heroTl.to(scenes[0].querySelector('.hero-stats'),      {yPercent:-25, opacity:0, ease:'none'}, 0);
+  heroTl.to(scenes[0].querySelector('.hero-scroll-hint'),{opacity:0,             ease:'none'}, 0);
 
-  // ── Scenes 1-7: SCRUBBED REVEALS ──
+  // ── Dot tracking for all scenes ──
   scenes.forEach(function(scene, i){
-    if(i === 0) return;
-
-    var content = scene.querySelector('.apple-content');
-    var label   = scene.getAttribute('data-label') || String(i+1);
-
-    // Active dot tracking
     ScrollTrigger.create({
       trigger: scene,
       start: 'top center',
       end: 'bottom center',
-      onEnter: function(){ setDot(i); setNum(i, TOTAL); },
+      onEnter:     function(){ setDot(i); setNum(i, TOTAL); },
       onEnterBack: function(){ setDot(i); setNum(i, TOTAL); },
     });
+  });
 
-    // Get direct child elements to animate
-    var els = Array.from(content.children);
+  // ── Sections 1–7: smooth scroll-linked reveals (no pinning) ──
+  scenes.forEach(function(scene, i){
+    if(i === 0) return;
 
-    // Set initial states
-    gsap.set(els, {opacity:0, y:60});
+    var content = scene.querySelector('.apple-content');
 
-    // Pin + scrub reveal
-    var tl = gsap.timeline({
-      scrollTrigger:{
-        trigger: scene,
-        start: 'top top',
-        end: 'bottom top',
-        pin: true,
-        pinSpacing: true,
-        scrub: 1.2,
-        anticipatePin: 1,
-      }
-    });
-
-    // Staggered reveal as scroll enters
-    tl.to(els, {
-      opacity: 1,
-      y: 0,
-      duration: 0.4,
-      stagger: 0.08,
-      ease: 'power2.out',
-    }, 0);
-
-    // Scale reveal
-    tl.fromTo(content,
-      {scale: 0.94},
-      {scale: 1, duration: 0.5, ease: 'power2.out'},
-      0
-    );
-
-    // Section label slides in from left
+    // 1. Section label slides in from the left
     var lbl = content.querySelector('.section-label');
     if(lbl){
-      gsap.set(lbl, {x:-40, opacity:0});
-      tl.to(lbl, {x:0, opacity:1, duration:0.4, ease:'power3.out'}, 0.05);
+      gsap.fromTo(lbl,
+        {x: -48, opacity: 0},
+        {x: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+          scrollTrigger:{trigger:lbl, start:'top 88%', toggleActions:'play none none reverse'}}
+      );
     }
 
-    // Section title pops in
-    var title = content.querySelector('.section-title span');
-    if(title){
-      gsap.set(title, {y:80, opacity:0});
-      tl.to(title, {y:0, opacity:1, duration:0.4, ease:'expo.out'}, 0.1);
+    // 2. Title / contact-headline spans: clip-reveal slides up from hidden overflow
+    var clipSpans = Array.from(content.querySelectorAll(
+      '.section-title .line span, .contact-headline .line span'
+    ));
+    if(clipSpans.length){
+      var titleEl = clipSpans[0].closest('h2') || clipSpans[0];
+      gsap.fromTo(clipSpans,
+        {y: '100%'},
+        {y: 0, duration: 0.75, stagger: 0.1, ease: 'expo.out',
+          scrollTrigger:{trigger:titleEl, start:'top 88%', toggleActions:'play none none reverse'}}
+      );
     }
+
+    // 3. Marquee / any full-width block with no individual card children
+    var marquee = content.querySelector('.marquee-wrap');
+    if(marquee){
+      gsap.fromTo(marquee,
+        {opacity: 0, y: 36},
+        {opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+          scrollTrigger:{trigger:marquee, start:'top 88%', toggleActions:'play none none reverse'}}
+      );
+    }
+
+    // 4. Individual cards & content blocks stagger in with a subtle scale
+    var cardSelector = [
+      '.about-text', '.about-right',
+      '.skill-card',
+      '.project-item',
+      '.exp-col-title', '.exp-item',
+      '.cert-item',
+      '.edu-item',
+      '.contact-info-list', '.contact-form'
+    ].join(', ');
+
+    Array.from(content.querySelectorAll(cardSelector)).forEach(function(card, ci){
+      gsap.fromTo(card,
+        {opacity: 0, y: 44, scale: 0.97},
+        {opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out',
+          delay: Math.min(ci * 0.05, 0.25),
+          scrollTrigger:{trigger:card, start:'top 90%', toggleActions:'play none none reverse'}}
+      );
+    });
   });
 
   // Hero dot active on load
   setDot(0);
   setNum(0, TOTAL);
 
-  ScrollTrigger.create({
-    trigger: scenes[0],
-    start: 'top center',
-    end: 'bottom center',
-    onEnter: function(){ setDot(0); setNum(0,TOTAL); },
-    onEnterBack: function(){ setDot(0); setNum(0,TOTAL); },
-  });
-
   // ── Hero entrance (one-time, on load) ──
-  gsap.to('.word',            {y:0,    stagger:.08, duration:.9, ease:'power3.out', delay:.1});
-  gsap.to('.hero-tag',        {opacity:1, duration:.6, delay:.5});
-  gsap.to('.hero-sub',        {opacity:1, duration:.7, delay:.7});
-  gsap.to('.hero-ctas',       {opacity:1, duration:.7, delay:.9});
-  gsap.to('.hero-scroll-hint',{opacity:1, duration:.7, delay:1.3});
-  gsap.to('#hero-img-col',    {opacity:1, x:0, duration:1, delay:.5, ease:'power3.out'});
-  gsap.to('.hero-stats',      {opacity:1, duration:.7, delay:1.1, onComplete:function(){
+  gsap.to('.word',             {y:0,     stagger:.08, duration:.9, ease:'power3.out', delay:.1});
+  gsap.to('.hero-tag',         {opacity:1, duration:.6, delay:.5});
+  gsap.to('.hero-sub',         {opacity:1, duration:.7, delay:.7});
+  gsap.to('.hero-ctas',        {opacity:1, duration:.7, delay:.9});
+  gsap.to('.hero-scroll-hint', {opacity:1, duration:.7, delay:1.3});
+  gsap.to('#hero-img-col',     {opacity:1, x:0, duration:1, delay:.5, ease:'power3.out'});
+  gsap.to('.hero-stats',       {opacity:1, duration:.7, delay:1.1, onComplete:function(){
     document.querySelectorAll('.stat-num').forEach(function(el){
       var txt=el.textContent.trim();
       var num=parseFloat(txt.replace(/[^0-9.]/g,''));
@@ -786,7 +763,7 @@ function init(){
     });
   }});
 
-  // Button magnetic
+  // Button magnetic effect
   document.querySelectorAll('.btn-primary,.btn-outline,.btn-submit').forEach(function(b){
     b.addEventListener('mousemove',function(e){
       var r=b.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
@@ -797,20 +774,14 @@ function init(){
     });
   });
 
-  // BUTTON NAVIGATION - Scroll to sections
+  // Smooth scroll for hero CTA buttons (native, no plugin needed)
   document.querySelectorAll('.hero-ctas a').forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
       var target = this.getAttribute('href');
       if(target && target.startsWith('#')){
         var el = document.querySelector(target);
-        if(el){
-          gsap.to(window, {
-            scrollTo: {y: el, offsetY: 80},
-            duration: 0.3,
-            ease: 'power2.inOut'
-          });
-        }
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
       }
       return false;
     });
