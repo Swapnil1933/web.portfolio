@@ -820,18 +820,15 @@ function init(){
     }
   });
 
-  // BUTTON NAVIGATION - Direct scroll without interference
+  // BUTTON NAVIGATION - Scroll to sections
   document.querySelectorAll('.hero-ctas a').forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
       var target = this.getAttribute('href');
-      if(target){
+      if(target && target.startsWith('#')){
         var el = document.querySelector(target);
         if(el){
-          window.scrollTo({
-            top: el.offsetTop,
-            behavior: 'smooth'
-          });
+          el.scrollIntoView({behavior: 'smooth', block: 'start'});
         }
       }
       return false;
