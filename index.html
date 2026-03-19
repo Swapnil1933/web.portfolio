@@ -211,42 +211,65 @@ body::before{content:"";position:fixed;inset:0;background-image:url("data:image/
   .nav-links{display:none;}
 }
 
-/* ══ APPLE-STYLE SCRUB ENGINE ══ */
-html { scroll-behavior: auto; }
+/* ══ SMOOTH PARALLAX SCROLL ENGINE ══ */
+html { scroll-behavior: smooth; }
 body { margin:0; padding:0; background:var(--bg); }
 
-/* Each scene is a tall scroll container that pins its content */
+/* Respect reduced motion – disable smooth scrolling for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Scene containers – natural scroll flow */
 .apple-scene {
   position: relative;
   height: auto;
   min-height: auto;
 }
-.apple-scene:first-child { height: 100vh; }
 
-/* The pinned panel stays fixed while you scroll through the scene */
+/* Remove sticky pinning – sections scroll normally */
 .apple-pin {
-  position: sticky;
-  top: 0;
   height: auto;
+  min-height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* Hero scene keeps full-viewport height for parallax */
+.apple-scene:first-child {
   min-height: 100vh;
   overflow: hidden;
+}
+.apple-scene:first-child .apple-pin {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-/* Content inside the pinned panel */
+/* Content flows naturally */
 .apple-content {
   width: 100%;
-  max-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible;
   padding: 90px 5vw 60px;
   box-sizing: border-box;
-  will-change: transform, opacity;
+  position: relative;
 }
-.apple-content::-webkit-scrollbar { width: 3px; }
-.apple-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); }
+
+/* GPU acceleration hints for parallax elements */
+.hero-grid-bg,
+.hero-text-col,
+.hero-img-col,
+.hero-stats { will-change: transform, opacity; }
+
+/* Reduced motion – disable parallax, show all content */
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid-bg,
+  .hero-text-col,
+  .hero-img-col,
+  .hero-stats { will-change: auto; }
+}
 
 /* Progress bar */
 #apple-bar {
@@ -636,16 +659,19 @@ window.addEventListener('scroll',function(){
 },{passive:true});
 
 // ══════════════════════════════════════
-// APPLE-STYLE SCRUB ENGINE
+// SMOOTH PARALLAX + OPACITY TRANSITIONS
 // ══════════════════════════════════════
 function init(){
   gsap.registerPlugin(ScrollTrigger);
 
-  var scenes  = Array.from(document.querySelectorAll('.apple-scene'));
-  var TOTAL   = scenes.length;
+  var scenes   = Array.from(document.querySelectorAll('.apple-scene'));
+  var TOTAL    = scenes.length;
   var appleBar = document.getElementById('apple-bar');
   var appleNum = document.getElementById('apple-num');
   var dotsWrap = document.getElementById('apple-dots');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isMobile = window.innerWidth < 768;
+  var pxFactor = isMobile ? 0.5 : 1; // reduced parallax on mobile
 
   // Build dots
   scenes.forEach(function(scene, i){
@@ -658,8 +684,6 @@ function init(){
     dotsWrap.appendChild(d);
   });
 
-  var dots = Array.from(dotsWrap.querySelectorAll('.apple-dot'));
-
   // Global scroll progress bar
   ScrollTrigger.create({
     start: 0,
@@ -669,30 +693,42 @@ function init(){
     }
   });
 
-  // ── Scene 0: HERO ──
-  var hero = scenes[0].querySelector('.apple-content');
-  var heroTl = gsap.timeline({
-    scrollTrigger:{
-      trigger: scenes[0],
-      start: 'top top',
-      end: 'bottom top',
-      scrub: 0.5,
-      pin: false,
-    }
-  });
-  // Hero grid drifts up
-  heroTl.to(scenes[0].querySelector('.hero-grid-bg'), {yPercent:40, ease:'none'}, 0);
-  // Hero text and image drift up at different speeds (parallax)
-  heroTl.to(scenes[0].querySelector('.hero-text-col'), {yPercent:-25, opacity:0, ease:'none'}, 0);
-  heroTl.to(scenes[0].querySelector('#hero-img-col'),  {yPercent:-15, opacity:0, ease:'none'}, 0);
-  heroTl.to(scenes[0].querySelector('.hero-stats'),    {yPercent:-30, opacity:0, ease:'none'}, 0);
+  // ── Scene 0: HERO PARALLAX DEPTH LAYERS ──
+  if(!reducedMotion){
+    // Grid background moves at 40% speed (slowest = furthest back)
+    gsap.to(scenes[0].querySelector('.hero-grid-bg'), {
+      yPercent: 40 * pxFactor,
+      ease: 'none',
+      scrollTrigger: {trigger: scenes[0], start: 'top top', end: 'bottom top', scrub: true}
+    });
+    // Text column fades out, drifts up at -25% offset
+    gsap.to(scenes[0].querySelector('.hero-text-col'), {
+      yPercent: -25 * pxFactor,
+      opacity: 0,
+      ease: 'none',
+      scrollTrigger: {trigger: scenes[0], start: 'top top', end: 'bottom top', scrub: true}
+    });
+    // Image parallax at -15% offset
+    gsap.to(scenes[0].querySelector('#hero-img-col'), {
+      yPercent: -15 * pxFactor,
+      opacity: 0,
+      ease: 'none',
+      scrollTrigger: {trigger: scenes[0], start: 'top top', end: 'bottom top', scrub: true}
+    });
+    // Stats drift and fade
+    gsap.to(scenes[0].querySelector('.hero-stats'), {
+      yPercent: -30 * pxFactor,
+      opacity: 0,
+      ease: 'none',
+      scrollTrigger: {trigger: scenes[0], start: 'top top', end: 'bottom top', scrub: true}
+    });
+  }
 
-  // ── Scenes 1-7: SCRUBBED REVEALS ──
+  // ── Scenes 1-7: SCROLL-TRIGGERED REVEALS FROM SIDES ──
   scenes.forEach(function(scene, i){
     if(i === 0) return;
 
     var content = scene.querySelector('.apple-content');
-    var label   = scene.getAttribute('data-label') || String(i+1);
 
     // Active dot tracking
     ScrollTrigger.create({
@@ -703,53 +739,80 @@ function init(){
       onEnterBack: function(){ setDot(i); setNum(i, TOTAL); },
     });
 
-    // Get direct child elements to animate
-    var els = Array.from(content.children);
+    if(reducedMotion){
+      // Fallback: just show everything immediately
+      gsap.set(Array.from(content.querySelectorAll(
+        '.section-label,.section-title span,.contact-headline span,.about-grid>*,.experience-grid>*,.contact-grid>*,.project-item,.cert-item,.edu-item,.exp-item,.skill-card,.marquee-wrap'
+      )), {opacity:1, x:0, y:0});
+      return;
+    }
 
-    // Set initial states
-    gsap.set(els, {opacity:0, y:60});
+    function makeTrigger(el, extraStart){
+      return {trigger: el, start: (extraStart || 'top') + ' 88%', toggleActions: 'play none none none'};
+    }
 
-    // Pin + scrub reveal
-    var tl = gsap.timeline({
-      scrollTrigger:{
-        trigger: scene,
-        start: 'top top',
-        end: 'bottom top',
-        pin: true,
-        pinSpacing: true,
-        scrub: 1.2,
-        anticipatePin: 1,
+    // Section label: slides in from left
+    var lbl = content.querySelector('.section-label');
+    if(lbl){
+      gsap.fromTo(lbl, {x:-60, opacity:0},
+        {x:0, opacity:1, duration:0.7, ease:'power3.out', scrollTrigger:makeTrigger(lbl)});
+    }
+
+    // Section title: slides up with stagger (handles both .section-title and .contact-headline)
+    var titleEls = content.querySelectorAll('.section-title span');
+    if(titleEls.length){
+      var titleParent = titleEls[0].closest('.section-title');
+      gsap.fromTo(titleEls, {y:80, opacity:0},
+        {y:0, opacity:1, duration:0.8, stagger:0.06, ease:'expo.out', scrollTrigger:makeTrigger(titleParent)});
+    }
+
+    // Contact headline: lines slide up
+    var headSpans = content.querySelectorAll('.contact-headline .line span');
+    if(headSpans.length){
+      var headParent = headSpans[0].closest('.contact-headline');
+      gsap.fromTo(headSpans, {y:80, opacity:0},
+        {y:0, opacity:1, duration:0.8, stagger:0.08, ease:'expo.out', scrollTrigger:makeTrigger(headParent)});
+    }
+
+    // Two-column grids: left column from left, right column from right
+    ['.about-grid', '.experience-grid', '.contact-grid'].forEach(function(sel){
+      var grid = content.querySelector(sel);
+      if(!grid) return;
+      Array.from(grid.children).forEach(function(col, j){
+        gsap.fromTo(col, {x: j % 2 === 0 ? -60 : 60, opacity:0},
+          {x:0, opacity:1, duration:0.9, ease:'power2.out', scrollTrigger:makeTrigger(col)});
+      });
+    });
+
+    // Project items: alternate left/right entrance with stagger
+    var projectItems = content.querySelectorAll('.project-item');
+    projectItems.forEach(function(item, j){
+      gsap.fromTo(item, {x: j % 2 === 0 ? -50 : 50, opacity:0},
+        {x:0, opacity:1, duration:0.8, ease:'power2.out', scrollTrigger:makeTrigger(item)});
+    });
+
+    // Skill cards: alternate left/right
+    var skillCards = content.querySelectorAll('.skill-card');
+    skillCards.forEach(function(card, j){
+      gsap.fromTo(card, {x: j % 2 === 0 ? -40 : 40, opacity:0},
+        {x:0, opacity:1, duration:0.7, ease:'power2.out', scrollTrigger:makeTrigger(card)});
+    });
+
+    // List items (certs, education, experience): stagger from bottom
+    ['.cert-item', '.edu-item', '.exp-item'].forEach(function(sel){
+      var items = content.querySelectorAll(sel);
+      if(items.length){
+        gsap.fromTo(items, {y:40, opacity:0},
+          {y:0, opacity:1, duration:0.7, stagger:0.1, ease:'power2.out',
+           scrollTrigger:makeTrigger(items[0].parentElement)});
       }
     });
 
-    // Staggered reveal as scroll enters
-    tl.to(els, {
-      opacity: 1,
-      y: 0,
-      duration: 0.4,
-      stagger: 0.08,
-      ease: 'power2.out',
-    }, 0);
-
-    // Scale reveal
-    tl.fromTo(content,
-      {scale: 0.94},
-      {scale: 1, duration: 0.5, ease: 'power2.out'},
-      0
-    );
-
-    // Section label slides in from left
-    var lbl = content.querySelector('.section-label');
-    if(lbl){
-      gsap.set(lbl, {x:-40, opacity:0});
-      tl.to(lbl, {x:0, opacity:1, duration:0.4, ease:'power3.out'}, 0.05);
-    }
-
-    // Section title pops in
-    var title = content.querySelector('.section-title span');
-    if(title){
-      gsap.set(title, {y:80, opacity:0});
-      tl.to(title, {y:0, opacity:1, duration:0.4, ease:'expo.out'}, 0.1);
+    // Marquee: fade in from below
+    var marquee = content.querySelector('.marquee-wrap');
+    if(marquee){
+      gsap.fromTo(marquee, {y:30, opacity:0},
+        {y:0, opacity:1, duration:0.6, ease:'power2.out', scrollTrigger:makeTrigger(marquee)});
     }
   });
 
@@ -797,20 +860,14 @@ function init(){
     });
   });
 
-  // BUTTON NAVIGATION - Scroll to sections
+  // Button navigation – smooth scroll to sections
   document.querySelectorAll('.hero-ctas a').forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
       var target = this.getAttribute('href');
       if(target && target.startsWith('#')){
         var el = document.querySelector(target);
-        if(el){
-          gsap.to(window, {
-            scrollTo: {y: el, offsetY: 80},
-            duration: 0.3,
-            ease: 'power2.inOut'
-          });
-        }
+        if(el) el.scrollIntoView({behavior:'smooth'});
       }
       return false;
     });
