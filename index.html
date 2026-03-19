@@ -338,8 +338,8 @@ body { margin:0; padding:0; background:var(--bg); }
       </h1>
       <p class="hero-sub">Building data-driven insights and analytical solutions. B.Tech CSE student at Lovely Professional University — turning raw data into decisions through dashboards, ML, and visualizations.</p>
       <div class="hero-ctas">
-        <a href="javascript:void(0)" onclick="scrollToScene('scene-3'); return false;" class="btn-primary">View Projects</a>
-        <a href="javascript:void(0)" onclick="scrollToScene('scene-7'); return false;" class="btn-outline">Get In Touch</a>
+        <a href="#scene-3" onclick="document.getElementById('scene-3').scrollIntoView({behavior:'smooth'});return false;" class="btn-primary">View Projects</a>
+        <a href="#scene-7" onclick="document.getElementById('scene-7').scrollIntoView({behavior:'smooth'});return false;" class="btn-outline">Get In Touch</a>
       </div>
     </div>
     <div class="hero-img-col" id="hero-img-col">
@@ -632,14 +632,6 @@ window.addEventListener('scroll',function(){
   navbar.classList.toggle('hidden', y>lastY && y>300);
   lastY=y;
 },{passive:true});
-
-// ── Scroll Helper ──
-function scrollToScene(sceneId){
-  var scene = document.getElementById(sceneId);
-  if(!scene) return;
-  var top = scene.offsetTop;
-  window.scrollTo({top: top, behavior: 'smooth'});
-}
 
 // ══════════════════════════════════════
 // APPLE-STYLE SCRUB ENGINE
