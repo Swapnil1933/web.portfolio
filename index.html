@@ -795,11 +795,52 @@ function init(){
     });
   });
 
-  // ── ADVANCED STICKY SCROLL ENGINE ──
-  var scrollState = {y: 0, vy: 0};
-  var lastY = 0;
+  // ── TEXT ANIMATION ON SCROLL ENGINE ──
+  // Animate content elements as they come into view
+  var contentSelector = '.about-text, .skill-card, .project-item, .exp-item, .cert-item, .edu-item, .contact-info-list, .contact-form, .section-label, .about-detail-list li, .project-tags, .form-group';
   
-  // Smooth scroll interceptor for button clicks
+  gsap.set(contentSelector, {opacity: 0, y: 40});
+
+  // Create scroll triggers for each section
+  document.querySelectorAll('.apple-scene').forEach(function(scene, i){
+    var sectionLabel = scene.querySelector('.section-label');
+    var sectionTitle = scene.querySelector('.section-title span');
+    var contentEls = scene.querySelectorAll(contentSelector);
+    
+    ScrollTrigger.create({
+      trigger: scene,
+      start: 'top 75%',
+      once: false,
+      onEnter: function(){
+        // Stagger text animations
+        if(sectionLabel) gsap.to(sectionLabel, {opacity: 1, x: 0, duration: 0.5, ease: 'power2.out'});
+        
+        if(sectionTitle){
+          var text = sectionTitle.innerText;
+          sectionTitle.innerHTML = text.split('').map(function(char){
+            return '<span style="opacity:0;display:inline-block">' + (char === ' ' ? '&nbsp;' : char) + '</span>';
+          }).join('');
+          gsap.to(sectionTitle.querySelectorAll('span'), {
+            opacity: 1,
+            duration: 0.4,
+            stagger: 0.02,
+            ease: 'power2.out'
+          });
+        }
+        
+        // Animate all content with stagger
+        gsap.to(contentEls, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: 'power2.out'
+        });
+      }
+    });
+  });
+
+  // Smooth scroll for button clicks
   document.querySelectorAll('.hero-ctas a').forEach(function(link){
     link.addEventListener('click', function(e){
       var target = this.getAttribute('href');
@@ -814,7 +855,6 @@ function init(){
     });
   });
 
-  // Advanced smooth scroll function
   function smoothScrollTo(el, duration){
     var targetY = el.offsetTop;
     var startY = window.scrollY;
@@ -839,31 +879,6 @@ function init(){
     }
     scroll();
   }
-
-  // Advanced parallax effect on scroll
-  window.addEventListener('scroll', function(){
-    var scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-    
-    // Update scroll-linked animations
-    scenes.forEach(function(scene, i){
-      var content = scene.querySelector('.apple-content');
-      if(!content) return;
-      
-      var rect = scene.getBoundingClientRect();
-      var inView = rect.top < window.innerHeight && rect.bottom > 0;
-      
-      if(inView){
-        var parallax = (window.scrollY - scene.offsetTop + window.innerHeight) / (window.innerHeight + scene.offsetHeight);
-        parallax = Math.max(0, Math.min(1, parallax));
-        
-        // Subtle parallax movement
-        gsap.set(content, {
-          y: parallax * 30,
-          opacity: 0.7 + parallax * 0.3
-        });
-      }
-    });
-  }, {passive: true});
 
 function setDot(i){
   Array.from(document.querySelectorAll('.apple-dot')).forEach(function(d,j){
