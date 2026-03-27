@@ -1,41 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        /* Add your CSS styling here */
-        .preloader { /* Preloader styles */ }
-        /* Add more styles for navigation, sections, etc. */
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Swapnil Nikhij | Data Analyst & CS Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+
+:root {
+  --bg: #0a0a0a; --bg2: #111111; --bg3: #181818;
+  --text: #f0ede6; --muted: #888480;
+  --accent: #c8f04a; --accent2: #4af0b8;
+  --border: rgba(240,237,230,0.08);
+  --font-head: "Syne", sans-serif;
+  --font-mono: "DM Mono", monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+h...
+</style>
 </head>
 <body>
-    <div class="preloader">Loading...</div>
-    <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#certificates">Certificates</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-    <section id="home"> <h1>Welcome to My Portfolio</h1> </section>
-    <section id="about"> <h2>About Me</h2> </section>
-    <section id="skills"> <h2>My Skills</h2> </section>
-    <section id="projects" id="scene-3"> <h2>My Projects</h2> </section>
-    <section id="experience"> <h2>Experience</h2> </section>
-    <section id="certificates"> <h2>Certificates</h2> </section>
-    <section id="education"> <h2>Education</h2> </section>
-    <section id="contact" id="scene-7"> <h2>Contact Me</h2> <a href="#projects">Go to Projects</a> <a href="#contact">Contact Me</a> </section>
-    <script>
-        // JavaScript for preloader, cursor animations, scroll effects
-    </script>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<div id="preloader">
+  <div id="preloader-name">
+    <span>S</span><span>w</span><span>a</span><span>p</span><span>n</span><span>i</span><span>l</span>
+  </div>
+  <div id="preloader-bar-wrap">
+    <div id="preloader-bar"></div>
+  </div>
+  <div id="preloader-count">000</div>
+</div>
+
+<nav id="navbar">
+  <a href="#" class="nav-logo">SN<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-text-col">
+      <div class="hero-tag">Available for opportunities</div>
+      <h1 class="hero-title">
+        <span class="line"><span class="word">Swapnil</span></span>
+        <span class="line"><span class="word accent-word">Nikhij</span></span>
+        <span class="line"><span class="word" style="color:var(--muted);font-size:.55em;letter-spacing:-1px;">Data Analyst &amp;</span></span>
+        <span class="line"><span class="word" style="font-size:.55em;letter-spacing:-1px;">CS Engineer</span></span>
+      </h1>
+      <p class="hero-sub">Building data-driven insights and analytical solutions. B.Tech CSE student at Lovely Professional University — turning raw data into decisions through dashboards, ML, and visualizations.</p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn-primary">View Projects</a>
+        <a href="#contact" class="btn-outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-img-col" id="hero-img-col">
+      <div class="avatar-wrap">
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+        <img class="avatar-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 360'%3E%3Crect fill='%23222' width='300' height='360'/%3E%3C/svg%3E" alt="Avatar">
+        <div class="avatar-badge">Available</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">20K+</div>
+      <div class="stat-label">Data Points</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100K+</div>
+      <div class="stat-label">Records Analyzed</div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <span class="section-label">About</span>
+      <h2 class="section-title"><span class="line"><span>About Me</span></span></h2>
+      <div class="about-text">
+        <p><strong>Computer Science & Engineering student at Lovely Professional University</strong> passionate about transforming complex datasets into clear, actionable insights.</p>
+        <p>My toolkit spans <strong>Python, SQL, Power BI, and Excel</strong> — I've built dashboards that visualized 20,000+ villages across Jharkhand and analyzed 100K+ rows of customer satisfaction data.</p>
+        <p>Beyond analytics, I hold <strong>Oracle Cloud Infrastructure certifications</strong> in AI Foundations and Data Science, and I've competed in university-level hackathons.</p>
+      </div>
+    </div>
+    <div class="about-right">
+      <ul class="about-detail-list">
+        <li><span>Location</span><span>Punjab, India</span></li>
+        <li><span>Experience</span><span>Internships & Projects</span></li>
+        <li><span>Education</span><span>B.Tech CSE</span></li>
+        <li><span>Certifications</span><span>Oracle OCI</span></li>
+      </ul>
+      <div class="socials">
+        <a href="https://github.com/Swapnil1933" target="_blank" class="social-link">GH</a>
+        <a href="https://linkedin.com/in/swapnil-nikhij-80056b279" target="_blank" class="social-link">LI</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <span class="section-label">Skills</span>
+  <h2 class="section-title"><span class="line"><span>Tech Stack</span></span></h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-card-icon">Languages</div>
+      <h3>Programming</h3>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">Tools</div>
+      <h3>BI & Analytics</h3>
+      <div class="skill-tags">
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Tableau</span>
+        <span class="skill-tag">Excel</span>
+        <span class="skill-tag">MySQL</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">Libraries</div>
+      <h3>Data Science</h3>
+      <div class="skill-tags">
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">NumPy</span>
+        <span class="skill-tag">Scikit-Learn</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <span class="section-label">Work</span>
+  <h2 class="section-title"><span class="line"><span>Featured Projects</span></span></h2>
+  <div class="projects-list">
+    <div class="project-item">
+      <div class="project-num">01</div>
+      <div>
+        <h3 class="project-title">Jharkhand Village Directory Dashboard</h3>
+        <p class="project-desc">Interactive Power BI dashboard visualizing 20K+ villages and 261 sub-districts. Features hierarchical drill-downs and advanced filtering.</p>
+        <div class="project-tags">
+          <span class="project-tag">Power BI</span>
+          <span class="project-tag">Data Analysis</span>
+          <span class="project-tag">Dashboard</span>
+        </div>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Swapnil1933/POWER-BI-DASHBOARD" target="_blank" class="project-link">View →</a>
+      </div>
+    </div>
+    <div class="project-item">
+      <div class="project-num">02</div>
+      <div>
+        <h3 class="project-title">Customer Satisfaction Analysis</h3>
+        <p class="project-desc">Cleaned and aggregated 100K+ rows of sales and feedback data. Identified 3 seasonal patterns with actionable business insights.</p>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Data Cleaning</span>
+          <span class="project-tag">Analysis</span>
+        </div>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Swapnil1933/CUSTOMER-STAISFACTION-DASHBOARD" target="_blank" class="project-link">View →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <span class="section-label">Experience</span>
+  <h2 class="section-title"><span class="line"><span>My Journey</span></span></h2>
+  <div class="experience-grid">
+    <div>
+      <div class="exp-col-title">Work</div>
+      <div class="exp-item">
+        <div class="exp-period">Jun - Jul 2025</div>
+        <div class="exp-title">Summer Internship</div>
+        <div class="exp-place">NextGen Networking</div>
+        <div class="exp-desc">Advanced Computer Networks: OSI & TCP/IP models, IPv4/IPv6, routing & switching with Packet Tracer</div>
+      </div>
+    </div>
+    <div>
+      <div class="exp-col-title">Awards</div>
+      <div class="exp-item">
+        <div class="exp-period">2024</div>
+        <div class="exp-title">3rd Place - Code Era Hackathon</div>
+        <div class="exp-place">Coding Blocks</div>
+        <div class="exp-desc">University-level hackathon with competitive time-bound problem solving</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certificates">
+  <span class="section-label">Credentials</span>
+  <h2 class="section-title"><span class="line"><span>Certifications</span></span></h2>
+  <div class="cert-list">
+    <div class="cert-item">
+      <div class="cert-left">
+        <div class="cert-name">Oracle Cloud Infrastructure 2025</div>
+        <div class="cert-issuer">AI Foundations Associate</div>
+      </div>
+      <div class="cert-date">October 2025</div>
+      <a href="https://brm-certview.oracle.com/" target="_blank" class="cert-verify-btn">Verify</a>
+    </div>
+    <div class="cert-item">
+      <div class="cert-left">
+        <div class="cert-name">Oracle Cloud Infrastructure 2025</div>
+        <div class="cert-issuer">Data Science Professional</div>
+      </div>
+      <div class="cert-date">October 2025</div>
+      <a href="https://catalog-education.oracle.com/" target="_blank" class="cert-verify-btn">Verify</a>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <span class="section-label">Education</span>
+  <h2 class="section-title"><span class="line"><span>Academic Background</span></span></h2>
+  <div class="edu-list">
+    <div class="edu-item">
+      <div class="edu-period">Aug 2023 - Present</div>
+      <div>
+        <div class="edu-school">Lovely Professional University</div>
+        <div class="edu-degree">B.Tech Computer Science & Engineering</div>
+        <div class="edu-grade">CGPA 6.08</div>
+        <div class="edu-location">Punjab, India</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-period">Apr 2021 - Mar 2022</div>
+      <div>
+        <div class="edu-school">DAV Public School</div>
+        <div class="edu-degree">Intermediate (Class XII)</div>
+        <div class="edu-grade">71%</div>
+        <div class="edu-location">Jharkhand, India</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-inner">
+    <h1 class="contact-headline">
+      <span class="line"><span>Let's Work</span></span>
+      <span class="line"><span class="accent-word">Together</span></span>
+    </h1>
+    <div class="contact-grid">
+      <ul class="contact-info-list">
+        <li>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-value"><a href="mailto:swapnil@mail.com">swapnil@mail.com</a></div>
+        </li>
+        <li>
+          <div class="contact-info-label">Phone</div>
+          <div class="contact-info-value">+91 6287648151</div>
+        </li>
+        <li>
+          <div class="contact-info-label">Location</div>
+          <div class="contact-info-value">Punjab, India</div>
+        </li>
+      </ul>
+      <div class="contact-form">
+        <form>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea placeholder="Your message" rows="5"></textarea>
+          </div>
+          <div class="form-submit-row">
+            <button type="submit" class="btn-submit">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">&copy; 2026 Swapnil Nikhij</div>
+  <div class="footer-love">Made with <span>❤</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+// Your JavaScript animations here
+console.log("Portfolio loaded");
+</script>
+
 </body>
 </html>
