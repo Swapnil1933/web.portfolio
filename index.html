@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swapnil Nikhij | Portfolio</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+    }
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Swapnil Nikhij | Data Analyst & CS Engineer</title>
@@ -11,6 +22,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 
+    header {
+      text-align: center;
+      padding: 60px 20px;
+    }
 :root {
   --bg: #0a0a0a; --bg2: #111111; --bg3: #181818;
   --text: #f0ede6; --muted: #888480;
@@ -23,9 +38,16 @@
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:var(--font-head);overflow-x:hidden;cursor:none;}
 
+    header h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
 #cursor{width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
 #cursor-ring{width:36px;height:36px;border:1.5px solid rgba(200,240,74,0.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:width .3s,height .3s,border-color .3s;}
 
+    header p {
+      color: #aaa;
+    }
 #preloader{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;}
 #preloader-name{font-size:clamp(32px,6vw,72px);font-weight:800;letter-spacing:-2px;overflow:hidden;}
 #preloader-name span{display:inline-block;}
@@ -33,6 +55,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-head);overflo
 #preloader-bar{height:100%;background:var(--accent);width:0;}
 #preloader-count{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:2px;}
 
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: #c8f04a;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+    }
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 5vw;display:flex;justify-content:space-between;align-items:center;transition:transform .4s cubic-bezier(.16,1,.3,1);}
 nav.hidden{transform:translateY(-100%);}
 nav::after{content:"";position:absolute;inset:0;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);z-index:-1;border-bottom:1px solid var(--border);opacity:0;transition:opacity .3s;}
@@ -45,6 +76,11 @@ nav.scrolled::after{opacity:1;}
 .nav-links a:hover{color:var(--text);}
 .nav-links a:hover::after{width:100%;}
 
+    section {
+      padding: 50px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
 #hero{min-height:100vh;padding:100px 5vw 0;display:flex;align-items:center;position:relative;overflow:hidden;}
 .hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);pointer-events:none;}
 .hero-content{max-width:1100px;width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr 340px;gap:60px;align-items:center;}
@@ -57,6 +93,11 @@ nav.scrolled::after{opacity:1;}
 .hero-sub{font-size:clamp(15px,1.6vw,17px);color:var(--muted);max-width:480px;line-height:1.7;margin-bottom:48px;opacity:0;font-weight:400;}
 .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;opacity:0;}
 
+    h2 {
+      border-bottom: 2px solid #c8f04a;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
 .hero-img-col{opacity:0;transform:translateX(40px);}
 .avatar-wrap{position:relative;width:300px;height:360px;}
 .avatar-wrap::before{content:"";position:absolute;inset:-2px;background:linear-gradient(135deg,var(--accent),transparent 50%,var(--accent2));clip-path:polygon(0 8%,8% 0,100% 0,100% 92%,92% 100%,0 100%);z-index:0;}
@@ -69,16 +110,33 @@ nav.scrolled::after{opacity:1;}
 .corner.bl{bottom:-6px;left:-6px;border-width:0 0 2px 2px;}
 .corner.br{bottom:-6px;right:-6px;border-width:0 2px 2px 0;}
 
+    .project {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #333;
+    }
 .hero-scroll-hint{position:absolute;bottom:40px;right:5vw;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;}
 .hero-scroll-hint span{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;writing-mode:vertical-rl;}
 .scroll-line{width:1px;height:60px;background:linear-gradient(var(--accent),transparent);animation:scrollLine 1.5s ease-in-out infinite;}
 @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
 
+    .project a {
+      color: #c8f04a;
+      text-decoration: none;
+    }
 .hero-stats{position:absolute;bottom:40px;left:5vw;display:flex;gap:40px;opacity:0;}
 .stat-item{display:flex;flex-direction:column;gap:4px;}
 .stat-num{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px;}
 .stat-label{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
 
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      border-top: 1px solid #333;
+    }
+  </style>
+</head>
 section{padding:80px 5vw 40px;}
 .section-label{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:12px;}
 .section-label::before{content:"";width:24px;height:1px;background:var(--accent);}
@@ -313,6 +371,9 @@ body { margin:0; padding:0; background:var(--bg); }
 </head>
 <body>
 
+<header>
+  <h1>Swapnil Nikhij</h1>
+  <p>Data Analyst | AI Enthusiast | CSE Student</p>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <div id="apple-bar"></div>
@@ -419,6 +480,8 @@ body { margin:0; padding:0; background:var(--bg); }
 </div>
 </div>
 
+  <a href="resume.pdf" class="btn" download>Download Resume</a>
+</header>
 <div class="apple-scene" id="scene-3" data-label="Projects">
   <div class="apple-pin">
     <div class="apple-content">
@@ -458,6 +521,13 @@ body { margin:0; padding:0; background:var(--bg); }
 </div>
 </div>
 
+<section>
+  <h2>About Me</h2>
+  <p>
+    I am a passionate Data Analyst and Computer Science student focused on building
+    real-world projects using Python, Machine Learning, and Data Visualization.
+  </p>
+</section>
 <div class="apple-scene" id="scene-4" data-label="Experience">
   <div class="apple-pin">
     <div class="apple-content">
@@ -493,6 +563,8 @@ body { margin:0; padding:0; background:var(--bg); }
 </div>
 </div>
 
+<section>
+  <h2>Projects</h2>
 <div class="apple-scene" id="scene-5" data-label="Certificates">
   <div class="apple-pin">
     <div class="apple-content">
@@ -520,6 +592,10 @@ body { margin:0; padding:0; background:var(--bg); }
 </div>
 </div>
 
+  <div class="project">
+    <h3>RAG AI Chatbot</h3>
+    <p>AI chatbot using FAISS and OpenAI API.</p>
+    <a href="https://github.com/yourusername/rag-project" target="_blank">View Project</a>
 <div class="apple-scene" id="scene-6" data-label="Education">
   <div class="apple-pin">
     <div class="apple-content">
@@ -558,6 +634,10 @@ body { margin:0; padding:0; background:var(--bg); }
 </div>
 </div>
 
+  <div class="project">
+    <h3>Data Dashboard</h3>
+    <p>Interactive dashboard using Python and Excel.</p>
+    <a href="#">View Project</a>
 <div class="apple-scene" id="scene-7" data-label="Contact">
   <div class="apple-pin">
     <div class="apple-content">
@@ -763,6 +843,7 @@ function init(){
     onEnterBack: function(){ setDot(0); setNum(0,TOTAL); },
   });
 
+</section>
   // ── Hero entrance (one-time, on load) ──
   gsap.to('.word',            {y:0,    stagger:.08, duration:.9, ease:'power3.out', delay:.1});
   gsap.to('.hero-tag',        {opacity:1, duration:.6, delay:.5});
@@ -784,6 +865,10 @@ function init(){
     });
   }});
 
+<section>
+  <h2>Skills</h2>
+  <p>Python, Pandas, NumPy, Machine Learning, Excel, SQL</p>
+</section>
   // Button magnetic
   document.querySelectorAll('.btn-primary,.btn-outline,.btn-submit').forEach(function(b){
     b.addEventListener('mousemove',function(e){
@@ -796,6 +881,12 @@ function init(){
   });
 }
 
+<section>
+  <h2>Contact</h2>
+  <p>Email: swapnil@example.com</p>
+  <p>GitHub: <a href="https://github.com/yourusername" target="_blank">yourusername</a></p>
+  <p>LinkedIn: <a href="#">Your Profile</a></p>
+</section>
 function setDot(i){
   Array.from(document.querySelectorAll('.apple-dot')).forEach(function(d,j){
     d.classList.toggle('active', j===i);
@@ -806,6 +897,9 @@ function setNum(i, total){
   if(el) el.textContent = String(i+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
 }
 
+<footer>
+  <p>© 2026 Swapnil Nikhij</p>
+</footer>
 function handleSubmit(e){
   e.preventDefault();
   var btn=e.target.querySelector('.btn-submit');
